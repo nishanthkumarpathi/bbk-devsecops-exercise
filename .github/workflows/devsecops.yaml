@@ -1,0 +1,44 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  component-analysis-npm-audit:
+    name: Component Analysis and NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: '14'
+
+      - name: Run NPM Audit
+        run: npm audit --json > npm-audit.json
+
+      - name: Upload NPM Audit Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
+
+  build-dummy:
+    name: Build Echo Statement
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Building Going on
+        run: echo "Building going on"
+
+  deploy-dummy:
+    name: Deploy Echo Statement
+    runs-on: ubuntu-latest
+    needs: build-dummy
+    steps:
+      - name: Echo Deploying Going on
+        run: echo "Deploying going on"
